@@ -1,0 +1,23 @@
+.item-line {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+
+    .hide {
+        visibility: hidden;
+    }
+
+    .col {
+        margin: 0 5px;
+
+        &.item-state {
+    
+        }
+        &.item-key {
+            flex: 1;
+        }
+        &.item-value {
+            flex: 2;
+        }
+    }
+}

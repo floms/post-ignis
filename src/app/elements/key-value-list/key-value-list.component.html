@@ -1,0 +1,10 @@
+<app-key-value-list-item
+  *ngFor="let item of items; index as index"
+  [item]="item"
+  [index]="index"
+  [suggestions]="suggestions"
+  [suggestionKeys]="suggestionKeys"
+  [suggestionValues]="suggestionValues"
+  (itemChange)="onItemChanged($event)"
+  (itemRemove)="onItemRemoved($event)" [removeable]="!isLastOne(index)">
+</app-key-value-list-item>

@@ -1,0 +1,29 @@
+<form class="example-form" [formGroup]="keyValueForm">
+  <div class="item-line">
+    <mat-checkbox color="primary" class="col item-state" formControlName="active" [ngClass]="{hide: !removeable}">
+
+    </mat-checkbox>
+    <!-- <p-autoComplete [(ngModel)]="text" [suggestions]="results" (completeMethod)="search($event)"></p-autoComplete> -->
+    <mat-form-field class="col item-key">
+      <input type="text" placeholder="Key" aria-label="Value" matInput formControlName="key"
+        [matAutocomplete]="autocompleteKey">
+      <mat-autocomplete #autocompleteKey="matAutocomplete">
+        <mat-option *ngFor="let option of optionsKey | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field class="col item-value">
+      <input type="text" placeholder="Value" aria-label="Value" matInput formControlName="value"
+        [matAutocomplete]="autocompleteValue">
+      <mat-autocomplete #autocompleteValue="matAutocomplete">
+        <mat-option *ngFor="let option of optionsValue | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <a mat-icon-button (click)="onRemove()">
+      <mat-icon aria-label="Remove" [ngClass]="{hide: !removeable}">close</mat-icon>
+    </a>
+  </div>
+</form>

@@ -1,0 +1,45 @@
+<mat-toolbar class="app-toolbar">
+  <h4>{{title}}</h4>
+</mat-toolbar>
+
+
+<mat-sidenav-container class="fill-vertical">
+  <mat-sidenav mode="side" opened>
+    <div class="search-box">
+      <form [formGroup]="searchForm">
+        <mat-form-field class="fill-horizontal">
+          <input matInput placeholder="Search" formControlName="keyword">
+        </mat-form-field>
+      </form>
+    </div>
+    <mat-list>
+      <mat-list-item *ngFor="let record of history" (click)="loadRequest(record.request)">
+        <h4 mat-line>{{record.request.type}}</h4>
+        <p mat-line> {{record.request.url}} </p>
+        <small class="date" mat-line> {{record.id | date:'short' }} </small>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <p-tabView styleClass="tabs-container" (onChange)="onTabChanged($event)" (onClose)="onTabClosed($event)"
+      [activeIndex]="activeTabIndex">
+      <p-tabPanel *ngFor="let tab of tabs; index as index" [closable]="!isLastTab(index)">
+        <ng-template pTemplate="header">
+          <span *ngIf="!isLastTab(index); else newTab">
+            {{ getRequestName(tab) }}
+          </span>
+          <ng-template #newTab>
+            <i class="pi pi-plus"></i>
+          </ng-template>
+        </ng-template>
+
+
+        <app-request-window [request]="tab.request" (sent)="onRequestSent($event, tab)"></app-request-window>
+      </p-tabPanel>
+    </p-tabView>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+
+<router-outlet></router-outlet>
