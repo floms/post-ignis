@@ -5,18 +5,23 @@ const { app, BrowserWindow, protocol } = require('electron')
 let win
 
 const path = require('path');
-const url = require('url');
+
+function getFilePath(url) {
+  const relativePath = path.relative('/', url.substr(7));
+
+  if (process.platform === 'win32') {
+    return '/' + path.relative('/', relativePath);
+  }
+
+  return '/' + relativePath;
+}
 
 function createWindow () {
   //Intercept any urls on the page and find the file on disk instead
   protocol.interceptFileProtocol('file', function(req, callback) {
-    var url = req.url.substr(7);
+    const filePath = __dirname + getFilePath(req.url);
 
-    if (url.indexOf(path.resolve()) === 0) {
-      url = url.substr(path.resolve().length);
-    }
-
-    callback({path: path.normalize(__dirname + url)});
+    callback({path: path.normalize(filePath)});
   },function (error) {
     if (error) {
       console.error('Failed to register protocol');
