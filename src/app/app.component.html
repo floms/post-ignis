@@ -13,7 +13,8 @@
       </form>
     </div>
     <mat-list>
-      <mat-list-item *ngFor="let record of history" (click)="loadRequest(record.request)">
+      <mat-list-item matTooltip="{{record.request.url}}" matTooltipPosition="after" *ngFor="let record of history"
+        (click)="loadRequest(record.request)">
         <h4 mat-line>{{record.request.type}}</h4>
         <p mat-line> {{record.request.url}} </p>
         <small class="date" mat-line> {{record.id | date:'short' }} </small>
