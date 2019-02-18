@@ -164,8 +164,16 @@ export class RequestWindowComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   processResponse(res) {
-    // TODO: add JSON, XML, parsing, etc. based on content-type
     this.response.body = res.text;
+
+    try {
+      const jsonBody = JSON.parse(this.response.body);
+
+      this.response.body = JSON.stringify(jsonBody, null, 2); 
+    } catch (error) {
+
+    }
+    
     this.response.headers = Object.keys(res.headers).map(key => {
       return {
         key,
