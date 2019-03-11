@@ -9,8 +9,7 @@ interface ItemChange {
     item: KeyValueItem;
 }
 
-
 export {
     KeyValueItem,
     ItemChange,
-}
+};

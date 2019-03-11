@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>Environment Configuration</h2>
+<form [formGroup]="environmentForm">
+    <mat-dialog-content class="env-config-container">
+        <div class="env-action-bar">
+            <p-dropdown [options]="environments$ | async" class="env-selector" optionLabel="name" dataKey="id"  formControlName="environment"></p-dropdown>
+
+            <div class="ui-inputgroup env-name">
+                <input pInputText class="url" placeholder="Environment name" formControlName="environmentName">
+            </div>
+
+            <p-button class="button padded-right" label="New" icon="fas fa-plus" (onClick)="onCreateEnvironment()"></p-button>
+
+            <p-button [disabled]="!actions.save" class="button padded-right" label="Save" icon="fas fa-save" (onClick)="onSaveEnvironment()"></p-button>
+            <p-button [disabled]="!actions.delete" class="button" icon="fas fa-times" (onClick)="onDeleteEnvironment()"></p-button>
+
+        </div>
+        <div class="env-config-textarea">
+            <textarea [rows]="5" pInputTextarea formControlName="environmentConfiguration"></textarea>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Close</button>
+    </mat-dialog-actions>
+</form>

@@ -1,14 +1,43 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <title>PostIgnis</title>
-  <base href="./">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta charset="utf-8">
+    <title>PostIgnis</title>
+    <base href="./">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <script src="assets/electron.js"></script>
+    <script>
+      function handleFirstTab(e) {
+        if (e.keyCode === 9) {
+          document.body.classList.add('active-keyboard');
+
+          window.removeEventListener('keydown', handleFirstTab);
+          window.addEventListener('mousedown', handleMouseDownOnce);
+        }
+      }
+
+      function handleMouseDownOnce() {
+        document.body.classList.remove('active-keyboard');
+
+        window.removeEventListener('mousedown', handleMouseDownOnce);
+        window.addEventListener('keydown', handleFirstTab);
+      }
+
+      window.addEventListener('keydown', handleFirstTab);
+    </script>
 </head>
+
 <body>
-  <app-root></app-root>
+<app-root>
+    <div class="app-loading">
+        <div class="logo"></div>
+        <svg class="spinner" viewBox="25 25 50 50">
+            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="1" stroke-miterlimit="10"/>
+        </svg>
+    </div>
+</app-root>
 </body>
+
 </html>

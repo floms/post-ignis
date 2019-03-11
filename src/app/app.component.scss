@@ -1,5 +1,9 @@
 @import '~@angular/material/theming';
 
+.toolbar-wrapper {
+  height: 64px;
+}
+
 .app-toolbar {
   position: sticky;
   position: -webkit-sticky;
@@ -12,10 +16,6 @@
     flex: 1 0 auto;
     text-align: center;
   }
-}
-
-mat-list-item {
-  cursor: pointer;
 }
 
 :host {
@@ -32,6 +32,7 @@ mat-list-item {
   padding: 10px 10px 0;
   background-color: mat-color($mat-grey, 50);
 }
+
 .fill-horizontal {
   width: 100%;
 }
@@ -41,6 +42,13 @@ small.date.mat-line {
   padding-top: 15px;
 }
 
-mat-sidenav {
-  width: 200px;
+.env-selector {
+  margin-right: 10px;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-x: hidden;
 }

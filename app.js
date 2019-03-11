@@ -1,8 +1,8 @@
-const { app, BrowserWindow, protocol } = require('electron')
+const {app, BrowserWindow, protocol} = require('electron')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win
+let win;
 
 const path = require('path');
 
@@ -16,30 +16,29 @@ function getFilePath(url) {
   return '/' + relativePath;
 }
 
-function createWindow () {
+function createWindow() {
   //Intercept any urls on the page and find the file on disk instead
-  protocol.interceptFileProtocol('file', function(req, callback) {
+  protocol.interceptFileProtocol('file', function (req, callback) {
     const filePath = __dirname + getFilePath(req.url);
 
     callback({path: path.normalize(filePath)});
-  },function (error) {
+  }, function (error) {
     if (error) {
       console.error('Failed to register protocol');
     }
   });
 
   // Create the browser window.
-  win = new BrowserWindow({ width: 1000, height: 600,
-    titleBarStyle: 'hiddenInset',
-    // frame: false,
-    swebPreferences: {
-      webSecurity : false,
-      webviewTag: true,
-      // nodeIntegration: true
-  }})
+  win = new BrowserWindow({
+    width: 1000,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  });
 
   // and load the index.html of the app.
-  win.loadFile('/dist/postignis/index.html')
+  win.loadFile('/dist/postignis/index.html');
 
   // Open the DevTools: Only for DEV
   // win.webContents.openDevTools();
@@ -65,7 +64,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
-})
+});
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
@@ -73,7 +72,7 @@ app.on('activate', () => {
   if (win === null) {
     createWindow()
   }
-})
+});
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

@@ -1,0 +1,11 @@
+<div class="fill-vertical" style="display:flex; width: 100%; overflow: hidden; height: 100%;">
+  <div [ngStyle]="sidebarStyle" #sidebar class="sidebar">
+    <ng-content select=".left"></ng-content>
+  </div>
+  <div class="col-divider" [ngClass]="{resizeable: resize}" (mousedown)="onMouseDown($event)" *ngIf="resize">
+    <div class="handle"></div>
+  </div>
+  <div style="flex: 10; overflow: auto">
+      <ng-content select=".right"></ng-content>
+  </div>
+</div>

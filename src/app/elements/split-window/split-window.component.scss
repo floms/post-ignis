@@ -1,0 +1,54 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+}
+
+@mixin transform($property) {
+  -webkit-transform: $property;
+  -ms-transform: $property;
+  transform: $property;
+}
+
+.sidebar {
+  overflow-x: hidden;
+
+  &.ltr {
+    position: absolute;
+    left: -100%;
+    @include transform(translateX(-100%));
+  }
+}
+
+.col-divider {
+  width: 8px;
+  background: #193b670d;
+  position: relative;
+
+  &.resizeable {
+    cursor: ew-resize;
+  }
+
+  .handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+
+    width: 2.25rem;
+    height: 2.25rem;
+
+    &:after {
+      content: '';
+      background-color: rgba(28, 52, 84, 0.26);
+      border-radius: 4.25px;
+      height: 100%;
+      width: 4px;
+      transition: 0.1s opacity, 0.1s background-color;
+    }
+  }
+}

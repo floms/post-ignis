@@ -1,0 +1,43 @@
+@mixin transform($property) {
+    -webkit-transform: $property;
+    -ms-transform: $property;
+    transform: $property;
+}
+
+.tab-panel {
+    // position: absolute;
+    // top: 0;
+    // left: 0;
+    // right: 0;
+
+    transition: 0.3s ease-in;
+    visibility: hidden;
+
+    &.ltr {
+        position: absolute;
+        left: -100%;
+        @include transform(translateX(-100%));
+    }
+
+    &.rtl {
+        position: absolute;
+        right: -100%;
+        @include transform(translateX(100%));
+    }
+
+    &.active {
+        visibility: visible;
+        @include transform(translateX(0));
+    }
+}
+.my-tab {
+    transform: translateX(-100%);
+
+    transition: 0.3s ease-in;
+    display: none;
+
+    &.active {
+        transform: translateX(0);
+        display: block;
+    }
+}

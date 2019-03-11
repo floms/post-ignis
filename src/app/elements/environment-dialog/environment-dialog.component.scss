@@ -1,0 +1,37 @@
+.env-config-container {
+  min-width: 800px;
+}
+
+.env-action-bar {
+  display: flex;
+  padding-bottom: 10px;
+}
+
+.padded-right {
+  margin-right: 10px;
+}
+
+.env-selector {
+  @extend .padded-right;
+}
+
+.env-name {
+  @extend .padded-right;
+
+  flex: 1;
+
+  input {
+    flex: 1;
+  }
+}
+
+.env-config-textarea {
+  textarea {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 300px;
+    max-height: 300px;
+    resize: none;
+  }
+}

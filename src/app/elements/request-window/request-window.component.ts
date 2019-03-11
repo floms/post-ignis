@@ -1,18 +1,10 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  OnDestroy,
-  Output,
-  EventEmitter,
-  OnChanges,
-  SimpleChanges
-} from '@angular/core';
-import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
-import { HttpRequestType } from 'src/app/util/http';
-import { RequestService } from 'src/app/request/request.service';
-import { tap, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {HttpRequestType} from 'src/app/util/http';
+import {RequestService} from 'src/app/request/request.service';
+import {takeUntil, tap} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {AxiosResponse} from 'axios';
 
 @Component({
   selector: 'app-request-window',
@@ -20,20 +12,16 @@ import { Subject } from 'rxjs';
   styleUrls: ['./request-window.component.scss']
 })
 export class RequestWindowComponent implements OnInit, OnDestroy, OnChanges {
-  private $onDestroy = new Subject();
-
   requestForm: FormGroup;
   requestTypes = [
-    { label: HttpRequestType.GET, value: HttpRequestType.GET },
-    { label: HttpRequestType.PUT, value: HttpRequestType.PUT },
-    { label: HttpRequestType.POST, value: HttpRequestType.POST },
-    { label: HttpRequestType.PATCH, value: HttpRequestType.PATCH },
-    { label: HttpRequestType.DELETE, value: HttpRequestType.DELETE },
+    {label: HttpRequestType.GET, value: HttpRequestType.GET},
+    {label: HttpRequestType.PUT, value: HttpRequestType.PUT},
+    {label: HttpRequestType.POST, value: HttpRequestType.POST},
+    {label: HttpRequestType.PATCH, value: HttpRequestType.PATCH},
+    {label: HttpRequestType.DELETE, value: HttpRequestType.DELETE},
   ];
-
   params = [];
   headers = [];
-
   response = {
     headers: [],
     body: '',
@@ -42,13 +30,39 @@ export class RequestWindowComponent implements OnInit, OnDestroy, OnChanges {
     time: 0,
     submitted: false,
     loading: true
-  }
-
+  };
   @Input() request;
   @Output() sent: EventEmitter<any> = new EventEmitter();
+  @Output() copy: EventEmitter<any> = new EventEmitter();
+  private $onDestroy = new Subject();
 
   constructor(private requestService: RequestService, private formBuilder: FormBuilder) {
 
+  }
+
+  get CurrentRequest() {
+    const {type, url, body} = this.requestForm.value;
+
+    // NOTE: parse query params out of the url
+    // const queryStarts = url.indexOf('?');
+    //
+    // if (queryStarts > 0) {
+    //   url = url.substr(0, queryStarts);
+    // }
+
+    return {
+      type,
+      url,
+      body,
+      params: this.params,
+      headers: this.headers,
+    };
+  }
+
+  get hasBody() {
+    const requestBody = this.requestForm.value.body;
+
+    return requestBody && requestBody.length > 0;
   }
 
   loadRequest() {
@@ -57,7 +71,7 @@ export class RequestWindowComponent implements OnInit, OnDestroy, OnChanges {
         type: this.request.type,
         url: this.request.url,
         body: this.request.body
-      })
+      });
 
 
       this.params = this.request.params;
@@ -93,25 +107,12 @@ export class RequestWindowComponent implements OnInit, OnDestroy, OnChanges {
     this.loadRequest();
   }
 
-
   ngOnDestroy(): void {
     this.$onDestroy.next();
   }
 
   onRequestUpdate() {
     // request is updated
-  }
-
-  get CurrentRequest() {
-    const { type, url, body } = this.requestForm.value;
-
-    return {
-      type,
-      url,
-      body,
-      params: this.params,
-      headers: this.headers,
-    };
   }
 
   async sendRequest() {
@@ -155,32 +156,35 @@ export class RequestWindowComponent implements OnInit, OnDestroy, OnChanges {
     this.response.submitted = false;
 
     this.sent.emit(this.CurrentRequest);
+
+    return true;
   }
 
-  get hasBody() {
-    const requestBody = this.requestForm.value.body;
-
-    return requestBody && requestBody.length > 0;
+  onCopy() {
+    this.copy.emit(this.response.body);
   }
 
-  processResponse(res) {
-    this.response.body = res.text;
+  processResponse(res: AxiosResponse) {
 
     try {
-      const jsonBody = JSON.parse(this.response.body);
+      const body = res.data;
 
-      this.response.body = JSON.stringify(jsonBody, null, 2); 
+      if (typeof body === 'object') {
+        this.response.body = JSON.stringify(body, null, 2);
+      } else {
+        this.response.body = body;
+      }
+
+      this.response.headers = Object.keys(res.headers).map(key => {
+        return {
+          key,
+          value: res.headers[key]
+        };
+      });
+      this.response.status = `${res.status} ${res.statusText}`;
     } catch (error) {
 
     }
-    
-    this.response.headers = Object.keys(res.headers).map(key => {
-      return {
-        key,
-        value: res.headers[key]
-      };
-    });
-    this.response.status = `${res.status} ${res.statusText}`;
   }
 
 }

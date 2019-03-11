@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { KeyValueItem, ItemChange } from 'src/app/util/generic';
 
 @Component({
@@ -6,7 +6,7 @@ import { KeyValueItem, ItemChange } from 'src/app/util/generic';
   templateUrl: './key-value-list.component.html',
   styleUrls: ['./key-value-list.component.scss']
 })
-export class KeyValueListComponent implements OnInit {
+export class KeyValueListComponent implements OnInit, OnChanges {
   @Input() items: KeyValueItem[] = [];
   @Input() suggestionKeys: string[] = [];
   @Input() suggestionValues: string[] = [];
@@ -23,6 +23,10 @@ export class KeyValueListComponent implements OnInit {
 
     // always add one editable item to the end
     this.addEditableItem();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    // console.log(changes);
   }
 
   onItemChanged(change: ItemChange) {

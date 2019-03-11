@@ -70,9 +70,11 @@ mat-list-item {
 
   #copy-button {
     margin: 0 0 0 8px;
+    i {
+      font-size: 1.5em;
+    }
   }
 }
-
 
 pre {
   font-size: 0.85em;

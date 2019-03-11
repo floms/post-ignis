@@ -1,46 +1,65 @@
-<mat-toolbar class="app-toolbar">
-  <h4>{{title}}</h4>
-</mat-toolbar>
-
-
-<mat-sidenav-container class="fill-vertical">
-  <mat-sidenav mode="side" opened>
-    <div class="search-box">
-      <form [formGroup]="searchForm">
-        <mat-form-field class="fill-horizontal">
-          <input matInput placeholder="Search" formControlName="keyword">
-        </mat-form-field>
-      </form>
+<ng-container *ngIf="(workspace$ | async) as workspace; else loading">
+    <div class="toolbar-wrapper">
+        <mat-toolbar class="app-toolbar">
+            <h4>Post<strong>Ignis</strong></h4>
+            <div class="env-selector-container">
+                <form [formGroup]="environmentForm">
+                    <p-dropdown [options]="workspace.environment.list" optionLabel="name" dataKey="id"
+                                class="env-selector" formControlName="environment"></p-dropdown>
+                    <p-button class="ui-button-secondary" icon="fas fa-bars"
+                              (onClick)="openDialog($event)"></p-button>
+                </form>
+            </div>
+        </mat-toolbar>
     </div>
-    <mat-list>
-      <mat-list-item matTooltip="{{record.request.url}}" matTooltipPosition="after" *ngFor="let record of history"
-        (click)="loadRequest(record.request)">
-        <h4 mat-line>{{record.request.type}}</h4>
-        <p mat-line> {{record.request.url}} </p>
-        <small class="date" mat-line> {{record.id | date:'short' }} </small>
-        <mat-divider></mat-divider>
-      </mat-list-item>
-    </mat-list>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <p-tabView styleClass="tabs-container" (onChange)="onTabChanged($event)" (onClose)="onTabClosed($event)"
-      [activeIndex]="activeTabIndex">
-      <p-tabPanel *ngFor="let tab of tabs; index as index" [closable]="!isLastTab(index)">
-        <ng-template pTemplate="header">
-          <span *ngIf="!isLastTab(index); else newTab">
-            {{ getRequestName(tab) }}
-          </span>
-          <ng-template #newTab>
-            <i class="pi pi-plus"></i>
-          </ng-template>
-        </ng-template>
+    <app-split-window class="fill-vertical" resize="true" [min]="120" [max]="600" [width]="workspace.state.sidebarWidth"
+                      (onResize)="onSidebarResize($event)">
+        <div class="left">
+            <div class="search-bar">
+                <div class="search-box">
+                    <form [formGroup]="searchForm">
+                        <mat-form-field class="fill-horizontal">
+                            <input matInput placeholder="Search" formControlName="keyword">
+                        </mat-form-field>
+                    </form>
+                </div>
+            </div>
+            <div class="list" style="flex: 1; overflow-y: scroll;">
+                <mat-list>
+                    <mat-list-item matTooltip="{{record.request.url}}" matTooltipPosition="after"
+                                   *ngFor="let record of history$ | async"
+                                   (click)="loadRequest(record.request)">
+                        <span mat-line style="font-size: 0.74em">
+                            <app-request-type [type]="record.request.type"></app-request-type> {{record.request.url}}
+                        </span>
+                        <small class="date" mat-line style="font-size: 0.67em"> {{record.date | date:'short' }}</small>
+                        <mat-divider></mat-divider>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+        </div>
+        <div class="right" style="overflow: hidden">
+            <app-tabs [activeIndex]="workspace.state.activeTab" (closeTab)="onTabClosed($event)" (newTab)="addTab()"
+                      (changeTab)="onTabChange($event)">
+                <app-tab-view *ngFor="let tab of workspace.tabs; index as index" [closable]="true">
+                    <ng-template #header>
+                        <span style="font-size: 0.67em">
+                            <app-request-type [type]="tab.request.type"></app-request-type> {{tab.request.url}}
+                        </span>
+                    </ng-template>
 
+                    <app-request-window [request]="tab.request"
+                                        (sent)="onRequestSent($event, tab)"
+                                        (copy)="onCopy($event)"></app-request-window>
+                </app-tab-view>
 
-        <app-request-window [request]="tab.request" (sent)="onRequestSent($event, tab)"></app-request-window>
-      </p-tabPanel>
-    </p-tabView>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+            </app-tabs>
 
+        </div>
+    </app-split-window>
+</ng-container>
+<ng-template #loading>
+    <app-splash></app-splash>
+</ng-template>
 
 <router-outlet></router-outlet>

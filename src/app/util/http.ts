@@ -4,7 +4,7 @@ enum HttpRequestType {
     PUT = 'PUT',
     PATCH = 'PATCH',
     DELETE = 'DELETE'
-};
+}
 
 class HttpHeader {
     constructor(public name: string, public value: string) {}

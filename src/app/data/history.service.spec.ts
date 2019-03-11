@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RequestPersistence } from './request-persistence.service';
+import { HistoryService } from './history.service';
 
-describe('PersistenceService', () => {
+describe('HistoryService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: RequestPersistence = TestBed.get(RequestPersistence);
+    const service: HistoryService = TestBed.get(HistoryService);
     expect(service).toBeTruthy();
   });
 });

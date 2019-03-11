@@ -1,0 +1,22 @@
+<div class="tabs">
+  <div class="tab-separator"></div>
+  <ul class="tab-container" role="tablist">
+    <li app-tab-header role="tab" tabindex="0" [index]="index" class="tab"
+      (keydown.enter)="activateTab(index)" (click)="activateTab(index)" [ngClass]="{'active': index === activeIndex}"
+      *ngFor="let tab of tabViews; index as index">
+      <span class="label">
+        <ng-container *ngTemplateOutlet="tab.Tab"></ng-container>
+      </span>
+      <span class="close" role="button" (click)="onCloseTab(index)">
+        <i class="fas fa-times"></i>
+      </span>
+    </li>
+  </ul>
+  <div class="tab new-tab" (click)="addTab(index)">
+    <i class="fas fa-plus"></i>
+  </div>
+</div>
+
+<div class="tab-panels">
+  <ng-content></ng-content>
+</div>

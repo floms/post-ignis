@@ -1,6 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 // @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
-
 @import '~@angular/material/theming';
 // Plus imports for other components in your app.
 
@@ -13,10 +12,10 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $primary-color: mat-palette($mat-blue);
-$accent:  mat-palette($mat-pink, A200, A100, A400);
+$accent: mat-palette($mat-pink, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
-$warn:    mat-palette($mat-red);
+$warn: mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
 $theme: mat-light-theme($primary-color, $accent, $warn);
@@ -27,7 +26,16 @@ $theme: mat-light-theme($primary-color, $accent, $warn);
 @include angular-material-theme($theme);
 
 // Google Fonts
-@import url(http://fonts.googleapis.com/css?family=Roboto|Open+Sans:400italic,700italic,400,700);
+//@import url(http://fonts.googleapis.com/css?family=Roboto|Open+Sans:400italic,700italic,400,700);
+
+//@import url('https://fonts.googleapis.com/css?family=Montserrat:100,300,400,400i,700,900');
+//@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+@import 'assets/font-awesome/fontawesome';
+@import 'assets/font-awesome/solid';
+@import 'assets/font-awesome/brands';
+
+@import 'fonts';
 
 html, body {
   width: 100%;
@@ -36,9 +44,87 @@ html, body {
   padding: 0;
 }
 
-body { 
-  font-family: Roboto, 'Open Sans', Arial, sans-serif;
+@mixin font() {
+  font-family: 'Montserrat', Roboto, 'Open Sans', Arial, sans-serif;
+}
+
+.toolbar-wrapper {
+  .app-toolbar {
+    h1, h2, h3, h4, h5, h6 {
+      @include font();
+    }
+  }
+}
+
+body {
+  @include font();
   margin: 0;
+  user-select: none;
+}
+
+.app-loading {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: #eceff1;
+
+  .logo {
+    width: 300px;
+    height: 300px;
+
+    // this way asset gets processed by webpack
+    background: url(./assets/postignis.png) center center no-repeat;
+    background-size: 60% 60%;
+  }
+
+  .spinner {
+    height: 400px;
+    width: 400px;
+    animation: rotate 2s linear infinite;
+    transform-origin: center center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+
+    .path {
+      stroke-dasharray: 1, 200;
+      stroke-dashoffset: 0;
+      animation: dash 1.5s ease-in-out infinite;
+      stroke-linecap: round;
+      stroke: #1e88e5;
+    }
+
+    @keyframes rotate {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes dash {
+      0% {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+      }
+      50% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -35px;
+      }
+      100% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -124px;
+      }
+    }
+  }
+}
+
+pre {
+  user-select: text;
 }
 
 .basic-container {
@@ -48,4 +134,22 @@ body {
 .version-info {
   font-size: 8pt;
   float: right;
+}
+
+body:not(.active-keyboard) {
+  *:focus {
+    outline: none;
+  }
+}
+
+.app-toolbar {
+  .env-selector-container {
+    height: 30px;
+
+    label {
+      height: 30px !important;
+      display: flex;
+      align-items: center;
+    }
+  }
 }
