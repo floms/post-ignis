@@ -8,7 +8,7 @@ export const initialState: any = {
   }
 };
 
-export const historyReducer = (state = initialState, action: HistoryActions) => {
+export function historyReducer(state = initialState, action: HistoryActions) {
   switch (action.type) {
     case HistoryActionTypes.LoadSuccess:
       return {
@@ -41,7 +41,7 @@ export const historyReducer = (state = initialState, action: HistoryActions) => 
     default:
       return state;
   }
-};
+}
 
 const allHistory = createFeatureSelector('history');
 

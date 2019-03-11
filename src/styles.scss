@@ -25,12 +25,6 @@ $theme: mat-light-theme($primary-color, $accent, $warn);
 // that you are using.
 @include angular-material-theme($theme);
 
-// Google Fonts
-//@import url(http://fonts.googleapis.com/css?family=Roboto|Open+Sans:400italic,700italic,400,700);
-
-//@import url('https://fonts.googleapis.com/css?family=Montserrat:100,300,400,400i,700,900');
-//@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-
 @import 'assets/font-awesome/fontawesome';
 @import 'assets/font-awesome/solid';
 @import 'assets/font-awesome/brands';

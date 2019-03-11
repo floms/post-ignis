@@ -16,7 +16,7 @@ export class SplitWindowComponent implements OnInit, OnChanges {
   private isResizing = false;
   private containerFrame: DOMRect;
 
-  private sidebarStyle = {
+  sidebarStyle = {
     flex: '1',
   };
 
