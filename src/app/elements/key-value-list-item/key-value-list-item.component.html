@@ -22,8 +22,7 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-    <a mat-icon-button (click)="onRemove()">
-      <mat-icon aria-label="Remove" [ngClass]="{hide: !removeable}">close</mat-icon>
+    <a mat-icon-button class="fas fa-times" aria-label="Remove" (click)="onRemove()" [ngClass]="{hide: !removeable}">
     </a>
   </div>
 </form>
