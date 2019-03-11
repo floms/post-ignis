@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --watch",
-    "app": "electron app.js",
+    "app": "electron index.js",
     "build": "ng build",
     "build:watch": "ng build --watch",
     "test": "ng test",
