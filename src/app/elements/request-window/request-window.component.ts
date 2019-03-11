@@ -145,7 +145,13 @@ export class RequestWindowComponent implements OnInit, OnDestroy, OnChanges {
 
       this.processResponse(res);
     } catch (error) {
-      this.processResponse(error.response);
+      const response = error.response || {
+        headers: {},
+        status: '',
+        statusText: error.message
+      };
+
+      this.processResponse(response);
     }
 
     const end = new Date();
