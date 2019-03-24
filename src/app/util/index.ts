@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-
+import * as template from 'es6-template-strings';
 
 export const merge = (a: any) => R.mergeDeepRight(a);
 
@@ -22,3 +22,8 @@ export const env = (raw: any) => {
     return result;
   }
 };
+
+export const parse = (payload: string, values: any) => {
+  return template(payload, values, {partial: true});
+};
+

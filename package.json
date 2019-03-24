@@ -33,6 +33,7 @@
     "@types/ramda": "^0.26.4",
     "axios": "^0.18.0",
     "core-js": "^2.5.4",
+    "es6-template-strings": "^2.0.1",
     "pouchdb": "^7.0.0",
     "primeicons": "^1.0.0",
     "primeng": "^7.0.5",

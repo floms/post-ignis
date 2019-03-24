@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpHeader, HttpRequestType} from '../util/http';
+import {parse} from '../util';
 
 import http, {AxiosResponse} from 'axios';
 import {select, Store} from '@ngrx/store';
 import {WorkspaceState} from '../store/workspace.reducers';
 import {map, switchMap, take} from 'rxjs/operators';
 import {from, Observable} from 'rxjs';
-import * as format from 'string-template';
 
 @Injectable()
 export class RequestService {
@@ -22,14 +22,14 @@ export class RequestService {
         const urlQuery: any = {};
         if (query) {
           query.forEach(queryParam => {
-            urlQuery[queryParam.name] = format(queryParam.value, env);
+            urlQuery[queryParam.name] = parse(queryParam.value, env);
           });
         }
 
         const requestHeaders: any = {};
         if (headers) {
           headers.forEach(header => {
-            requestHeaders[header.name] = format(header.value, env);
+            requestHeaders[header.name] = parse(header.value, env);
           });
         }
 
@@ -38,7 +38,7 @@ export class RequestService {
           url,
           headers: requestHeaders,
           params: urlQuery,
-          data: format(body, env)
+          data: parse(body, env)
         });
 
         return from(request);
