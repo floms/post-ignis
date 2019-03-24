@@ -2,8 +2,8 @@ import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, Si
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {HttpRequestType} from 'src/app/util/http';
 import {RequestService} from 'src/app/request/request.service';
-import {takeUntil, tap} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import {catchError, takeUntil, tap} from 'rxjs/operators';
+import {of, Subject} from 'rxjs';
 import {AxiosResponse} from 'axios';
 
 @Component({
@@ -33,7 +33,7 @@ export class RequestWindowComponent implements OnInit, OnDestroy, OnChanges {
   };
   @Input() request;
   @Output() sent: EventEmitter<any> = new EventEmitter();
-  @Output() copy: EventEmitter<any> = new EventEmitter();
+  @Output() copyResponse: EventEmitter<any> = new EventEmitter();
   private $onDestroy = new Subject();
 
   constructor(private requestService: RequestService, private formBuilder: FormBuilder) {
@@ -115,14 +115,21 @@ export class RequestWindowComponent implements OnInit, OnDestroy, OnChanges {
     // request is updated
   }
 
-  async sendRequest() {
+  sendRequest() {
     this.response.loading = true;
     this.response.submitted = true;
 
     const request = this.CurrentRequest;
 
-    const params = request.params.filter(param => param.active);
-    const headers = request.headers.filter(header => header.active);
+    const params = request.params.filter(param => param.active).map(param => ({
+      name: param.key,
+      value: param.value
+    }));
+
+    const headers = request.headers.filter(header => header.active).map(header => ({
+      name: header.key,
+      value: header.value
+    }));
 
     // remove last empty element "blank row"
     params.pop();
@@ -130,48 +137,35 @@ export class RequestWindowComponent implements OnInit, OnDestroy, OnChanges {
 
     const start = new Date();
 
-    try {
-      const res = await this.requestService.perform(request.type, request.url,
-        params.map(e => ({
-          name: e.key,
-          value: e.value
-        })),
-        request.body,
-        headers.map(e => ({
-          name: e.key,
-          value: e.value
-        }))
-      );
+    return this.requestService.perform(request.type, request.url, params, request.body, headers).pipe(
+      catchError(error => {
+        const response = error.response || {
+          headers: {},
+          status: '',
+          statusText: error.message
+        };
 
-      this.processResponse(res);
-    } catch (error) {
-      const response = error.response || {
-        headers: {},
-        status: '',
-        statusText: error.message
-      };
-
+        return of(response);
+      })
+    ).subscribe(response => {
       this.processResponse(response);
-    }
 
-    const end = new Date();
+      const end = new Date();
 
-    this.response.time = end.getTime() - start.getTime();
+      this.response.time = end.getTime() - start.getTime();
 
-    this.response.loading = false;
-    this.response.submitted = false;
+      this.response.loading = false;
+      this.response.submitted = false;
 
-    this.sent.emit(this.CurrentRequest);
-
-    return true;
+      this.sent.emit(this.CurrentRequest);
+    });
   }
 
   onCopy() {
-    this.copy.emit(this.response.body);
+    this.copyResponse.emit(this.response.body);
   }
 
   processResponse(res: AxiosResponse) {
-
     try {
       const body = res.data;
 
@@ -192,5 +186,4 @@ export class RequestWindowComponent implements OnInit, OnDestroy, OnChanges {
 
     }
   }
-
 }

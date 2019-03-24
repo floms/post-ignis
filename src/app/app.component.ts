@@ -124,7 +124,7 @@ export class AppComponent implements OnInit {
     this.store.dispatch(new WorkspaceRemoveTab(event.index));
   }
 
-  onCopy(data: any) {
+  onCopyResponse(data: any) {
     electron.clipboard.writeText(data);
   }
 

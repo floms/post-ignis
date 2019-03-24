@@ -1,4 +1,5 @@
 import {WorkspaceActions, WorkspaceActionTypes} from './workspace.actions';
+import {env} from '../util';
 
 const noEnvironment = {
   id: '',
@@ -57,7 +58,11 @@ export function workspaceReducer(state = initialState, action: WorkspaceActions)
 
       const envChange = action.state.environment;
       if (typeof envChange !== 'undefined') {
-        const active = state.environment.list.find(env => env.id === envChange);
+        const active = state.environment.list.find(environment => environment.id === envChange);
+
+        if (active) {
+          active.env = env(active.value);
+        }
 
         newState.environment = {
           ...newState.environment,
@@ -72,7 +77,7 @@ export function workspaceReducer(state = initialState, action: WorkspaceActions)
         ...state,
       };
 
-      if (typeof action.active !== 'undefined') {
+      if (action.active) {
         newState.state.environment = action.active;
       }
 
@@ -90,8 +95,12 @@ export function workspaceReducer(state = initialState, action: WorkspaceActions)
         }
       };
 
-      if (typeof news.state.environment !== 'undefined') {
-        const active = news.environment.list.find(env => env.id === news.state.environment);
+      if (news.state.environment) {
+        const active = news.environment.list.find(environment => environment.id === news.state.environment);
+
+        if (active) {
+          active.env = env(active.value);
+        }
 
         news.environment = {
           ...news.environment,
@@ -138,7 +147,11 @@ export function workspaceReducer(state = initialState, action: WorkspaceActions)
         }
       };
     case WorkspaceActionTypes.SelectEnvironment:
-      const selected = state.environment.list.find(env => env.id === action.environment);
+      const selected = state.environment.list.find(environment => environment.id === action.environment);
+
+      if (selected) {
+        selected.env = env(selected.value);
+      }
 
       return {
         ...state,
