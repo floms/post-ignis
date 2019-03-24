@@ -39,7 +39,7 @@ function createWindow() {
   });
 
   // and load the index.html of the app.
-  win.loadFile('/dist/postignis/index.html');
+  win.loadFile('/index.html');
 
   // Open the DevTools: Only for DEV
   // win.webContents.openDevTools();
