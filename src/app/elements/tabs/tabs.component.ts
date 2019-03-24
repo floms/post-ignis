@@ -79,10 +79,6 @@ export class TabsComponent implements OnInit, OnChanges, AfterViewChecked {
       return;
     }
 
-    this.tabViews.forEach((tab: any, i) => {
-      tab.update(i, index);
-    });
-
     if (!this.tabHeaders) {
       return;
     }

@@ -1,4 +1,4 @@
-import {Component, ContentChild, ElementRef, Input} from '@angular/core';
+import {Component, ContentChild, Input} from '@angular/core';
 
 @Component({
   selector: 'app-tab-view',
@@ -27,10 +27,4 @@ export class TabViewComponent {
   get Tab() {
     return this.header;
   }
-
-  update(index, activeIndex) {
-    this.index = index;
-    this.activeIndex = activeIndex;
-  }
-
 }

@@ -5,16 +5,6 @@ import {DataHandler} from './data-handler';
 
 @Injectable()
 export class WorkspaceService extends DataHandler {
-  // private db = new DataProvider('__workspace__');
-  //
-  // constructor() {
-  // }
-  //
-  // update(record: any) {
-  //   return this.db.update({
-  //     ...record,
-  //   });
-  // }
 
   db() {
     return '__workspace__';
@@ -26,10 +16,6 @@ export class WorkspaceService extends DataHandler {
       id: uuid()
     });
   }
-
-  // remove(record: any) {
-  //   return this.db.delete(record);
-  // }
 
   all() {
     return super.all().pipe(

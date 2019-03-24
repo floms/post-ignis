@@ -41,7 +41,8 @@
         <div class="right" style="overflow: hidden">
             <app-tabs [activeIndex]="workspace.state.activeTab" (closeTab)="onTabClosed($event)" (newTab)="addTab()"
                       (changeTab)="onTabChange($event)">
-                <app-tab-view *ngFor="let tab of workspace.tabs; index as index" [closable]="true">
+                <app-tab-view *ngFor="let tab of workspace.tabs; index as index"
+                              [activeIndex]="workspace.state.activeTab" [index]="index" [closable]="true">
                     <ng-template #header>
                         <span style="font-size: 0.67em">
                             <app-request-type [type]="tab.request.type"></app-request-type> {{tab.request.url}}

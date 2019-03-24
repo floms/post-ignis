@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {DataProvider} from './data-provider';
 import {catchError, switchMap} from 'rxjs/operators';
-// import {StateV1} from '../data-persistence/state-persistence.service';
 import {Observable, of} from 'rxjs';
 
 @Injectable()
@@ -9,7 +8,6 @@ export class StateService {
   private STATE_ID = 'workspace_state';
   private db = new DataProvider('__state__');
 
-  // get(): Observable<StateV1> {
   get(): Observable<any> {
     return this.db.find(this.STATE_ID).pipe(
       catchError(() => {
