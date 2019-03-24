@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {distinctUntilChanged, filter, map, tap} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
+import {distinctUntilChanged, filter, map, takeUntil, tap} from 'rxjs/operators';
 import {Action, select, Store} from '@ngrx/store';
 import {
   WorkspaceNewEnvironment,
@@ -18,12 +18,13 @@ import {WorkspaceState} from '../../store/workspace.reducers';
   templateUrl: './environment-dialog.component.html',
   styleUrls: ['./environment-dialog.component.scss']
 })
-export class EnvironmentDialogComponent implements OnInit {
+export class EnvironmentDialogComponent implements OnInit, OnDestroy {
   environmentForm: FormGroup;
   environments$: Observable<any>;
   environmentControl: FormControl;
   environmentNameControl: FormControl;
   environmentValueControl: FormControl;
+  onDestroy$: Subject<boolean> = new Subject<boolean>();
 
   actions = {
     save: false,
@@ -47,13 +48,15 @@ export class EnvironmentDialogComponent implements OnInit {
     this.environmentValueControl = new FormControl();
 
     this.environments$ = this.store.pipe(
+      // take(1),
       select('workspace'),
       tap(workspace => {
         const environment = workspace.environment.active;
 
         this.selectEnvironment(environment);
       }),
-      map(workspace => workspace.environment.list)
+      map(workspace => workspace.environment.list),
+      takeUntil(this.onDestroy$)
     );
 
     this.environmentControl.valueChanges.pipe(distinctUntilChanged(), filter(env => env)).subscribe((environment: any) => {
@@ -110,13 +113,15 @@ export class EnvironmentDialogComponent implements OnInit {
   }
 
   onSaveEnvironment() {
+    const values: any = {...this.environmentForm.value};
+
     this.environmentControl.disable();
     this.actions.save = false;
 
     const data: any = {
-      ...this.CurrentEnvironment,
-      name: this.environmentForm.value.environmentName,
-      value: this.environmentForm.value.environmentConfiguration
+      ...values.environment,
+      name: values.environmentName,
+      value: values.environmentConfiguration
     };
 
     // TODO: show error because environment name is required
@@ -138,5 +143,9 @@ export class EnvironmentDialogComponent implements OnInit {
 
   onDeleteEnvironment() {
     this.store.dispatch(new WorkspaceRemoveEnvironment(this.CurrentEnvironment));
+  }
+
+  ngOnDestroy() {
+    this.onDestroy$.next(true);
   }
 }
