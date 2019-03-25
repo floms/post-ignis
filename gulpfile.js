@@ -14,7 +14,7 @@ const copy = () => {
 };
 
 const build = (done) => {
-  const runBuild = spawn('npm', ['run', 'build']);
+  const runBuild = spawn('npm', ['run', 'build', '--', '--prod']);
 
   runBuild.stdout.on('data', function (data) {
     console.log(data.toString());
