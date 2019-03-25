@@ -1,10 +1,11 @@
 {
   "name": "postignis",
   "version": "0.0.2",
+  "description": "a user friendly http workbench",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --watch",
-    "app": "electron index.js",
+    "app": "electron dist/postignis/index.js",
     "build": "ng build",
     "build:watch": "ng build --watch",
     "test": "ng test",
