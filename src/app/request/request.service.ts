@@ -35,7 +35,7 @@ export class RequestService {
 
         const request = http.request({
           method: type,
-          url,
+          url: parse(url, env),s
           headers: requestHeaders,
           params: urlQuery,
           data: parse(body, env)
