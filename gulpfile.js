@@ -1,5 +1,6 @@
 const {series, task, src, dest} = require('gulp');
 const {spawn} = require('child_process');
+const createDMG = require('electron-installer-dmg');
 
 const DIST_PATH = 'dist';
 const APP_DIST_PATH = `${DIST_PATH}/postignis`;
@@ -43,8 +44,30 @@ const pack = async () => {
   });
 };
 
+const installer = async () => {
+  const mac = new Promise((resolve, reject) => {
+    createDMG({
+      appPath: `${DIST_PATH}/app/PostIgnis-darwin-x64/PostIgnis.app`,
+      name: 'PostIgnis',
+      overwrite: true,
+      icon: `${APP_DIST_PATH}/assets/icons/app.icns`,
+      out: `${DIST_PATH}/app/installer`
+    }, (error) => {
+      if (error) {
+        return reject(error);
+      }
+
+      return resolve();
+    });
+  });
+
+
+  return await mac;
+};
+
 exports.build = build;
 exports.copy = copy;
 exports.pack = pack;
+exports.installer = installer;
 
 exports.default = series(build, copy, pack);
