@@ -45,8 +45,20 @@ export function historyReducer(state = initialState, action: HistoryActions) {
 
 const allHistory = createFeatureSelector('history');
 
-export const historySearch = createSelector(allHistory, (state: any ) => {
-  return state.all.filter((record: any) =>
-    record.request.url.toLowerCase().indexOf(state.search.term.toLowerCase()) >= 0
-  );
+export const historySearch = createSelector(allHistory, (state: any) => {
+  let term: string = state.search.term;
+
+  const methodFilter = /(.*)method\:(GET|POST|PUT|PATCH|DELETE)(.*)/gi.exec(term);
+
+  if (methodFilter) {
+    term = methodFilter[1] + methodFilter[3];
+  }
+
+  return state.all.filter((record: any) => {
+    if (methodFilter && record.request.type !== methodFilter[2]) {
+      return false;
+    }
+
+    return record.request.url.toLowerCase().indexOf(term.trim().toLowerCase()) >= 0;
+  });
 });
