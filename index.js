@@ -1,4 +1,4 @@
-const {app, BrowserWindow, protocol, Menu} = require('electron')
+const {app, BrowserWindow, protocol, Menu, session} = require('electron')
 
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -18,6 +18,16 @@ function getFilePath(url) {
 }
 
 function createWindow() {
+
+  // Modify the user agent for all requests to the following urls.
+  const filter = {
+    urls: ['*']
+  }
+
+  session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+    details.requestHeaders['User-Agent'] = 'MyAgent'
+    callback({ requestHeaders: details.requestHeaders })
+  })
   //Intercept any urls on the page and find the file on disk instead
   protocol.interceptFileProtocol('file', function (req, callback) {
     const filePath = __dirname + getFilePath(req.url);
