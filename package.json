@@ -53,7 +53,7 @@
     "@types/node": "~8.9.4",
     "@types/ramda": "0.26.4",
     "codelyzer": "~4.5.0",
-    "electron": "^7.2.4",
+    "electron": "^15.5.5",
     "electron-installer-dmg": "^2.0.0",
     "electron-packager": "^13.1.1",
     "electron-winstaller": "^3.0.4",
